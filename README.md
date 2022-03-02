@@ -14,5 +14,7 @@ My changes
 Так же сами файлы .terraformrc и terraform.rc
 
 New line
+
 new line with IDE 1
+
 new line with IDE 2
