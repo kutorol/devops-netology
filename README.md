@@ -12,3 +12,5 @@ My changes
 Будут проигнорированы файлы "переписывания" override.tf или override.td.json или {что-то}_override.tf или {что-то}_override.tf.json
 
 Так же сами файлы .terraformrc и terraform.rc
+
+New line
