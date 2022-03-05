@@ -3,10 +3,10 @@
 
 count=1
 count2=1
-# shellcheck disable=SC2066
-for param in "$*"; do
+
+while [[ -n "$1" ]]; do
     echo "$count - $count2"
-    echo "\$* Parameter #$count = $param"
+    echo "Parameter #$count = $1"
     count=$(( $count + 1 ))
     # shellcheck disable=SC2004
     count2=$(( $count2 + 1 ))
