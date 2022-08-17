@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  db_pg:
+    image: postgres:12
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_USER=test
+    volumes:
+      - /Users/klayn/Sites/netology/devops-netology/homework/6.2/dbdata:/var/lib/postgresql
+      - /Users/klayn/Sites/netology/devops-netology/homework/6.2/backup:/backup
+    ports:
+      - ${POSTGRESQL_PORT:-5432}:5432
