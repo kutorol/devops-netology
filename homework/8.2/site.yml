@@ -1,0 +1,89 @@
+---
+- name: Install Vector
+  hosts: vector
+  tasks:
+    - name: Get vector distrib
+      tags:
+        - vector
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_version }}/vector-{{ vector_version }}-x86_64-apple-darwin.tar.gz"
+        dest: "./vector-{{ vector_version}}.tar.gz"
+        validate_certs: no
+
+    - name: Create vector folder
+      tags:
+        - vector
+      ansible.builtin.file:
+        path: "./vector-{{ vector_version }}"
+        state: directory
+
+    - name: Unarchive vector folder
+      become: true
+      tags:
+        - vector
+      ansible.builtin.unarchive:
+        src: "./vector-{{ vector_version }}.tar.gz"
+        dest: "./vector-{{ vector_version }}"
+        creates: "./vector-{{ vector_version }}/bin/vector"
+
+    - name: Set inveronment vector distrib
+      tags:
+        - vector
+      become: true
+      template:
+        src: templates/vector.j2
+        dest: /etc/profile.d/vector
+
+    - name: Check version vector
+      tags:
+        - vector
+      ansible.builtin.command: vector --version
+      register: vector_version
+
+    - name: fas
+      tags:
+        - vector
+      ansible.builtin.debug:
+        msg: "{{ vector_version }}"
+
+- name: Install Clickhouse
+  hosts: clickhouse
+  handlers:
+    - name: Start clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+  tasks:
+    - block:
+      tags: clickhouse
+        - name: Get clickhouse distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.noarch.rpm"
+            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+            validate_certs: no
+          with_items: "{{ clickhouse_packages }}"
+
+      rescue:
+        - name: Get clickhouse distrib rescue
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+            validate_certs: no
+
+    - name: Install clickhouse packages
+      tags: clickhouse
+      become: true
+      ansible.builtin.yum:
+        name:
+          - clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - clickhouse-client-{{ clickhouse_version }}.rpm
+          - clickhouse-server-{{ clickhouse_version }}.rpm
+      notify: Start clickhouse service
+
+    - name: Create database
+      tags: clickhouse
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc !=82
+      changed_when: create_db.rc == 0
