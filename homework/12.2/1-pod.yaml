@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: myapp
+  name: hello-world
+spec:
+  containers:
+    - image: gcr.io/kubernetes-e2e-test-images/echoserver:2.2
+      imagePullPolicy: IfNotPresent
+      name: hello-world-container
+
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: netology-web
+  name: netology-web
+spec:
+  containers:
+    - image: gcr.io/kubernetes-e2e-test-images/echoserver:2.2
+      imagePullPolicy: IfNotPresent
+      name: netology-web-container
