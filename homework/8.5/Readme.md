@@ -32,5 +32,4 @@
 
 Новый тег с молекулой и tox
 
-- [Vector-role:0.2.0](https://github.com/kutorol/vector-role/releases/tag/0.2.0)
-  - [Репозиторий vector-role](https://github.com/kutorol/vector-role) 
+- [Vector-role:0.2.0](https://github.com/kutorol/vector-role-2/tree/0.2.0) 
