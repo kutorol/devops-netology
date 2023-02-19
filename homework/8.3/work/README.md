@@ -43,3 +43,11 @@
     ```bash
     terraform destroy -auto-approve
     ```
+    
+### Обновление
+
+> Не нашли пункта 9
+> 
+> ###  Ответ
+> 
+> [Readme_playbook](./Readme_playbook.md)
